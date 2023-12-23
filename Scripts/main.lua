@@ -1,92 +1,47 @@
 local UEHelpers = require("UEHelpers")
 
--- DONT TOUCH
+-- LUA SETTINGS #START
+hideBattleHud = true -- Hides Top Bar Hud
+hideGameMessages = true -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
+hideGuideText = true -- Removes guide text info.
+-- LUA SETTINGS #END
 
-allowHook = true
-
-hiddenTopBar = false
-hiddenGuideMenu = false
-hiddenEverything = false
-
-function HideGameMessages(forceVisibility, shouldHide)
-    tk8_battlemessages = FindFirstOf("WBP_UI_GameMessage_C")
-    if not tk8_battlemessages:IsValid() then
-        print("Battle Messages Cannot be found")
+function HideGenericWidget(tk8_widget, shouldHideWidget)
+    if not tk8_widget:IsValid() then
+        print("Widget Not Found")
         return
     end
 
-    if forceVisibility then
-        if shouldHide then
-            tk8_battlemessages:SetVisibility(2)
-        else
-            tk8_battlemessages:SetVisibility(0)
-        end
-    end
-end
-
-function HideTopBar(forceVisibility, shouldHide)
-    tk8_hudPlayer = FindFirstOf("WBP_UI_HUD_C")
-    if not tk8_hudPlayer:IsValid() then
-        print("Hud Player Cannot be found")
-        return
-    end
-
-    if forceVisibility then
-        if shouldHide then
-            tk8_hudPlayer:SetVisibility(2)
-            hiddenTopBar = true
-        else
-            tk8_hudPlayer:SetVisibility(0)
-            hiddenTopBar = false
-        end
+    if shouldHideWidget then
+        tk8_widget:SetVisibility(2)
     else
-        if hiddenTopBar then
-            tk8_hudPlayer:SetVisibility(0)
-            hiddenTopBar = false
-        else
-            tk8_hudPlayer:SetVisibility(2)
-            hiddenTopBar = true
-        end
+        tk8_widget:SetVisibility(0)
     end
 end
 
-function HideGuideMenu(forceVisibility, shouldHide)
-    tk8_guideButton = FindFirstOf("WBP_UI_Guide_Button_C")
-    if not tk8_guideButton:IsValid() then
-        print("Guide button could not be found")
-        return
-    end
-
-    if forceVisibility then
-        if shouldHide then
-            tk8_guideButton:SetVisibility(2)
-            hiddenGuideMenu = true
-        else
-            tk8_guideButton:SetVisibility(0)
-            hiddenGuideMenu = false
-        end
+function HideHud()
+    if shouldHide then
+        print("Hud Options Enabled")
+        shouldHide = false
     else
-        if hiddenGuideMenu then
-            tk8_guideButton:SetVisibility(0)
-            hiddenGuideMenu = false
-        else
-            tk8_guideButton:SetVisibility(2)
-            hiddenGuideMenu = true
-        end
+        print("Hud Options Disabled")
+        shouldHide = true
+    end
+
+    if hideGuideText then
+        tk8_guideButton = FindFirstOf("WBP_UI_Guide_Button_C")
+        HideGenericWidget(tk8_guideButton, shouldHide)
+    end
+
+    if hideGameMessages then
+        tk8_battlemessages = FindFirstOf("WBP_UI_GameMessage_C")
+        HideGenericWidget(tk8_battlemessages, shouldHide)
+    end
+
+    if hideBattleHud then
+        tk8_hudPlayer = FindFirstOf("WBP_UI_HUD_C")
+        HideGenericWidget(tk8_hudPlayer, shouldHide)
     end
 end
 
-function HideEverything()
-    if hiddenEverything then
-        hiddenEverything = false
-    else
-        hiddenEverything = true
-    end
-
-    HideTopBar(true, hiddenEverything)
-    HideGuideMenu(true, hiddenEverything)
-    HideGameMessages(true, hiddenEverything)
-end
-
-RegisterKeyBind(Key.F8, HideGuideMenu)
-RegisterKeyBind(Key.F9, HideEverything)
+RegisterKeyBind(Key.F9, HideHud)
