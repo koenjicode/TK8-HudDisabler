@@ -3,9 +3,13 @@ local UEHelpers = require("UEHelpers")
 -- LUA SETTINGS #START
 toggleKeyBind = Key.F9 -- The key that's pressed to toggle your hud!
 
-hideBattleHud = true -- Hides Top Bar Hud
+hideBattleHud = true -- Hides HUD elements used in Battle.
 hideGameMessages = true -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
 hideGuideText = true -- Removes guide text info.
+
+-- Experimental
+hideAllHud = false -- Hides every hud element - Menus, Everything! (Not Recommended)
+
 -- LUA SETTINGS #END
 
 function HideGenericWidget(tk8_widget, shouldHideWidget)
@@ -43,6 +47,16 @@ function HideHud()
     if hideBattleHud then
         tk8_hudPlayer = FindFirstOf("WBP_UI_HUD_C")
         HideGenericWidget(tk8_hudPlayer, shouldHide)
+    end
+
+    if hideAllHud then
+        UIWidgets = FindAllOf("Widget")
+        local Widget = nil
+        for Index,Widget in pairs(UIWidgets) do
+            if shouldHide then
+                HideGenericWidget(Widget, true)
+            end
+        end
     end
 end
 
