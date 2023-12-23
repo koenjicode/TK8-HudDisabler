@@ -8,6 +8,22 @@ hiddenTopBar = false
 hiddenGuideMenu = false
 hiddenEverything = false
 
+function HideGameMessages(forceVisibility, shouldHide)
+    tk8_battlemessages = FindFirstOf("WBP_UI_GameMessage_C")
+    if not tk8_battlemessages:IsValid() then
+        print("Battle Messages Cannot be found")
+        return
+    end
+
+    if forceVisibility then
+        if shouldHide then
+            tk8_battlemessages:SetVisibility(2)
+        else
+            tk8_battlemessages:SetVisibility(0)
+        end
+    end
+end
+
 function HideTopBar(forceVisibility, shouldHide)
     tk8_hudPlayer = FindFirstOf("WBP_UI_HUD_C")
     if not tk8_hudPlayer:IsValid() then
@@ -69,6 +85,7 @@ function HideEverything()
 
     HideTopBar(true, hiddenEverything)
     HideGuideMenu(true, hiddenEverything)
+    HideGameMessages(true, hiddenEverything)
 end
 
 RegisterKeyBind(Key.F8, HideGuideMenu)
