@@ -1,6 +1,8 @@
 local UEHelpers = require("UEHelpers")
 
 -- LUA SETTINGS #START
+toggleKeyBind = Key.F9 -- The key that's pressed to toggle your hud!
+
 hideBattleHud = true -- Hides Top Bar Hud
 hideGameMessages = true -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
 hideGuideText = true -- Removes guide text info.
@@ -44,4 +46,4 @@ function HideHud()
     end
 end
 
-RegisterKeyBind(Key.F9, HideHud)
+RegisterKeyBind(toggleKeyBind, HideHud)
