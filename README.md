@@ -15,4 +15,3 @@ Configure Hud Disable Settings:
 - Edit the settings in-between LUA SETTINGS #START and LUA SETTINGS #END
 
 By default, the Lua script will hide all game elements from the screen.
-To adjust what gets hidden, open up the Lua script and edit the fields in between Lua Settings
