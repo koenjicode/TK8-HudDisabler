@@ -3,8 +3,8 @@ local UEHelpers = require("UEHelpers")
 -- LUA SETTINGS #START
 toggleKeyBind = Key.F9 -- The key that's pressed to toggle your hud!
 
-hideBattleHud = true -- Hides HUD elements used in Battle.
-hideGameMessages = true -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
+hideBattleHud = false -- Hides HUD elements used in Battle.
+hideGameMessages = false -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
 hideGuideText = true -- Removes guide text info.
 
 -- Experimental
@@ -36,7 +36,16 @@ function HideHud()
 
     if hideGuideText then
         tk8_guideButton = FindFirstOf("WBP_UI_Guide_Button_C")
-        HideGenericWidget(tk8_guideButton, shouldHide)
+        if tk8_guideButton:IsValid() then
+            guideCanvas = tk8_guideButton.HorizontalBox_206
+            if shouldHide then
+                guideCanvas:SetVisibility(2)
+            else
+                guideCanvas:SetVisibility(0)
+            end
+        else
+            print("Guide Widget Not Present")
+        end
     end
 
     if hideGameMessages then
