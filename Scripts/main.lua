@@ -5,7 +5,7 @@ toggleKeyBind = Key.F9 -- The key that's pressed to toggle your hud!
 
 hideBattleHud = true -- Hides HUD elements used in Battle.
 hideGameMessages = true -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
-hideGuideText = true -- Removes guide text info.
+hideGuideText = true -- Removes guide text info (Replay Menu Controls, What buttons to press for menus, etc)
 
 -- Experimental
 hideAllHud = false -- Hides every hud element - Menus, Everything! (Not Recommended)
@@ -69,6 +69,7 @@ function HideHud()
             replay_img1 = tk8_replay_info.Image_BG
             replay_img2 = tk8_replay_info.Rep_T_UI_RE_Icon
             replay_img3 = tk8_replay_info.T_UI_RE_Disabled
+
             HideGenericWidget(replay_img1, shouldHide)
             HideGenericWidget(replay_img2, shouldHide)
             HideGenericWidget(replay_img3, true)
