@@ -1,7 +1,7 @@
 ## Tekken 8 Hud Disabler (Polaris Hud Disabler)
 **(Requires UE4SS)**
 
-Hud Disabler built during Tekken 8 CBT, tested and updated for the Tekken 8 Final Release and Demo.
+Hud Disabler was Originally built for the Tekken 8 CBT, tested and updated for the Tekken 8 Demo and Final Build.
 
 To use: The default hotkey is F9 to hide your chosen elements.
 
