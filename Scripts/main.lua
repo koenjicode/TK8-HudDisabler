@@ -1,90 +1,83 @@
-local UEHelpers = require("UEHelpers")
+local config = require "config"
+local is_hidden = false
 
--- LUA SETTINGS #START
-toggleKeyBind = Key.F9 -- The key that's pressed to toggle your hud!
-
-hideBattleHud = true -- Hides HUD elements used in Battle.
-hideGameMessages = true -- Hides Battle Messages (Round 1, Round 2, You Win, etc)
-hideGuideText = true -- Removes guide text info (Replay Menu Controls, What buttons to press for menus, etc)
-
--- Experimental
-hideAllHud = false -- Hides every hud element - Menus, Everything! (Not Recommended)
-
--- LUA SETTINGS #END
-
-function HideGenericWidget(tk8_widget, shouldHideWidget)
+function hideGenericWidget(tk8_widget, should_hide_widget)
     if not tk8_widget:IsValid() then
         print("Widget Not Found")
         return
     end
 
-    if shouldHideWidget then
+    if should_hide_widget then
         tk8_widget:SetVisibility(2)
     else
         tk8_widget:SetVisibility(0)
     end
 end
 
-function HideHud()
-    if shouldHide then
-        print("Hud Options Enabled")
-        shouldHide = false
+function hideHud()
+    if is_hidden then
+        is_hidden = false
     else
-        print("Hud Options Disabled")
-        shouldHide = true
+        is_hidden = true
     end
 
-    if hideGuideText then
-        tk8_guideButton = FindFirstOf("WBP_UI_Guide_Button_C")
-        if tk8_guideButton:IsValid() then
-            guideCanvas = tk8_guideButton.HorizontalBox_206
-            if shouldHide then
-                guideCanvas:SetVisibility(2)
+    if config.disable_guide_text then
+        local _tk8_guideButton = FindFirstOf("WBP_UI_Guide_Button_C")
+        if _tk8_guideButton:IsValid() then
+            local _guide_canvas = _tk8_guideButton.HorizontalBox_206
+            if is_hidden then
+                _guide_canvas:SetVisibility(2)
             else
-                guideCanvas:SetVisibility(0)
+                _guide_canvas:SetVisibility(0)
             end
         else
             print("Guide Widget Not Present")
         end
     end
 
-    if hideGameMessages then
-        tk8_battlemessages = FindFirstOf("WBP_UI_GameMessage_C")
-        HideGenericWidget(tk8_battlemessages, shouldHide)
+    if config.disable_game_messages then
+        local _tk8_battle_messages = FindFirstOf("WBP_UI_GameMessage_C")
+        hideGenericWidget(_tk8_battle_messages, is_hidden)
     end
 
-    if hideBattleHud then
-        tk8_hudPlayer = FindFirstOf("WBP_UI_HUD_C")
-        tk8_fps = FindFirstOf("WBP_UI_FPS_C")
-        tk8_practice = FindFirstOf("WBP_UI_Practice_C")
-        tk8_replay = FindFirstOf("WBP_UI_Replay_C")
-        tk8_replay_info = FindFirstOf("WBP_UI_Replay_Info_C")
+    if config.disable_battle_hud then
+        local _tk8_widgets = {
+            FindFirstOf("WBP_UI_HUD_C"),
+            FindFirstOf("WBP_UI_FPS_C"),
+            FindFirstOf("WBP_UI_Practice_C"),
+            FindFirstOf("WBP_UI_Replay_C"),
+            FindFirstOf("WBP_UI_Replay_Info_C"),
+        }
 
-        HideGenericWidget(tk8_hudPlayer, shouldHide)
-        HideGenericWidget(tk8_fps, shouldHide)
-        HideGenericWidget(tk8_practice, shouldHide)
-        HideGenericWidget(tk8_replay, shouldHide)
+        for i, w in ipairs(_tk8_widgets) do
+            if w:IsValid() then
+                hideGenericWidget(w, is_hidden)
 
-        if tk8_replay_info:IsValid() then
-            replay_img1 = tk8_replay_info.Image_BG
-            replay_img2 = tk8_replay_info.Rep_T_UI_RE_Icon
-            replay_img3 = tk8_replay_info.T_UI_RE_Disabled
+                if i == 5 then
+                    local _replay_imgs = {
+                        w.Image_BG,
+                        w.Rep_T_UI_RE_Icon,
+                        w.T_UI_RE_Disabled,
+                    }
 
-            HideGenericWidget(replay_img1, shouldHide)
-            HideGenericWidget(replay_img2, shouldHide)
-            HideGenericWidget(replay_img3, true)
+                    for i2, v in ipairs(_replay_imgs) do
+                        if v:IsValid() then
+                            hideGenericWidget(v, is_hidden)
+                        end
+                    end
+                end
+            end
         end
     end
 
-    if hideAllHud then
-        UIWidgets = FindAllOf("Widget")
-        local Widget = nil
-        for Index,Widget in pairs(UIWidgets) do
-            if shouldHide then
-                HideGenericWidget(Widget, true)
+    if config.hide_all_hud then
+        local _ui_widgets = FindAllOf("Widget")
+        for i, v in pairs(_ui_widgets) do
+            if is_hidden then
+                hideGenericWidget(v, true)
             end
         end
     end
 end
 
-RegisterKeyBind(toggleKeyBind, HideHud)
+RegisterKeyBind(config.toggle_key_bind, hideHud)
